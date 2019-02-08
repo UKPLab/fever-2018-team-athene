@@ -69,23 +69,13 @@ Construct an SQLite Database (go grab a coffee while this runs)
     PYTHONPATH=src python src/scripts/build_db.py data/wiki-pages data/fever/fever.db
 
  
-## Run the document retrieval model
+## Run the end to end pipeline of the submitted models
 
-    PYTHONPATH=src python src/athene/retrieval/document/docment_retrieval.py --db-file data/fever/fever.db --in-file data/fever-data/train.jsonl --out-file data/fever/train.wiki7.newest_doc.jsonl --k-wiki 7
-    PYTHONPATH=src python src/athene/retrieval/document/docment_retrieval.py --db-file data/fever/fever.db --in-file data/fever-data/dev.jsonl --out-file data/fever/dev.np.wiki7.newest_doc.jsonl --k-wiki 7
+    PYTHONPATH=src python src/script/athene/pipeline.py
 
-
-## Run the sentence retrieval model
-
-    PYTHONPATH=src python src/athene/retrieval/sentences/pipeline3.py
-          
-## Run the recognizing textual entailment model
-    PYTHONPATH=src python src/scripts/athene/rte.py --mode train
-    PYTHONPATH=src python src/scripts/athene/rte.py --mode test
-
-## Run other variations of the RTE model
-Other variations of the ESIM model are configured through the config files in the conf folder.
+## Run the variation of the RTE model
+Another variation of the ESIM model is configured through the config file in the conf folder.
 
 To run the models:
     
-    PYTHONPATH=src python src/scripts/athene/rte.py --mode <train/test> --config conf/<config_file>
+    PYTHONPATH=src python src/scripts/athene/pipeline.py --config conf/<config_file>
