@@ -52,6 +52,11 @@ Download pretrained Wiki FastText Vectors
     source activate fever
     pip install -r requirements.txt
 
+
+Download NLTK Punkt Tokenizer
+
+    python -c "import nltk; nltk.download('punkt')"
+
 ## Data Preparation
 The data preparation consists of three steps: downloading the articles from Wikipedia, indexing these for the Evidence Retrieval and performing the negative sampling for training . 
 
