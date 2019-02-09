@@ -37,7 +37,7 @@ class Config:
     SUBMISSION_FILE_NAME = "predictions.jsonl"
     model_name = "esim_0"
     glove_path = path.join(BASE_DIR, "data/glove/glove.6B.300d.txt.gz")
-    fasttext_path = path.join(BASE_DIR, "data/fasttext/wiki.en")
+    fasttext_path = path.join(BASE_DIR, "data/fasttext/wiki.en.bin")
     # fasttext_path = path.join(BASE_DIR, "data/fasttext/fasttext.p")
     model_folder = path.join(BASE_DIR, "model/%s" % model_name)
     ckpt_folder = path.join(model_folder, 'checkpoints')
