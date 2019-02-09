@@ -148,8 +148,8 @@ class Data(object):
                             if not sample:
                                 continue
                             X.append((claim, pos_sent, sample))
-                            if count % 1000 == 0:
-                                print("claim:{} ,evidence :{} sample:{}".format(claim, pos_sent, sample))
+                            # if count % 1000 == 0:
+                            #     print("claim:{} ,evidence :{} sample:{}".format(claim, pos_sent, sample))
         return X
 
     def predict_processing(self, datapath):
