@@ -62,7 +62,7 @@ The data preparation consists of three steps: downloading the articles from Wiki
 
 ### 1. Download Wikipedia data:
 
-Download the pre-processed Wikipedia articles from [our website](https://sheffieldnlp.github.io/fever/data.html) and unzip it into the data folder.
+Download the pre-processed Wikipedia articles and unzip it into the data folder.
     
     wget https://s3-eu-west-1.amazonaws.com/fever.public/wiki-pages.zip
     unzip wiki-pages.zip -d data
