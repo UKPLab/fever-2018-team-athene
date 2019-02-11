@@ -5,16 +5,11 @@ import re
 
 import nltk
 import numpy as np
-from pycorenlp import StanfordCoreNLP
 
-from athene.rte.feature_extaction.average_word_embedding import get_word_embedding_features
-from athene.rte.feature_extaction.fnc_baseline_features import word_overlap_features, refuting_features, \
-    polarity_features, hand_features
 from common.util.log_helper import LogHelper
 
 # import torch
 np.random.seed(55)
-nlp = StanfordCoreNLP("http://10.130.26.5:9000")
 
 
 def vocab_map(vocab):
