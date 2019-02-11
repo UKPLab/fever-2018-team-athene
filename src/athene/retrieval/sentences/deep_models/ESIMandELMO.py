@@ -12,7 +12,7 @@ he_init = tf.contrib.layers.variance_scaling_initializer()
 dim_fasttext = 300
 
 
-class ELMO_ESIM(object):
+class ELMO_ESIM:
 
     def __init__(self, optimizer=tf.train.AdamOptimizer, learning_rate=0.0001,
                  batch_size=128, activation=tf.nn.relu, initializer=he_init, num_epoch=100, dropout_rate=None,
@@ -191,7 +191,7 @@ class ELMO_ESIM(object):
             training_op = optimizer.minimize(loss)
 
         init = [tf.tables_initializer(), tf.global_variables_initializer()]
-        saver = tf.train.Saver()
+        saver = tf.train.Saver(tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES))
 
         if self.tensorboard_logdir:
             now = datetime.utcnow().strftime('%Y%m%d-%H%M%S')

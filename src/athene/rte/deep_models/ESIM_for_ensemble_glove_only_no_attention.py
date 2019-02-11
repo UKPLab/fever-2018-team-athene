@@ -318,7 +318,7 @@ class ESIM(BaseEstimator, ClassifierMixin):
 
         with tf.variable_scope(scope):
             with tf.variable_scope("embedding_lookup"):
-                embedding = tf.Variable(self.embedding, trainable=self.trainable)
+                embedding = tf.get_variable(initializer=self.embedding, dtype=tf.float32, trainable=self.trainable)
                 inputs_embedded = tf.nn.embedding_lookup(embedding, inputs)
                 return inputs_embedded
 
@@ -404,7 +404,7 @@ class ESIM(BaseEstimator, ClassifierMixin):
         confusion_matrix = tf.confusion_matrix(y_, predicts, num_classes=self.n_outputs, name="confusion_matrix")
 
         init = tf.global_variables_initializer()
-        saver = tf.train.Saver()
+        saver = tf.train.Saver(tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES))
 
         if self.tensorboard_logdir:
             now = datetime.utcnow().strftime('%Y%m%d-%H%M%S')
