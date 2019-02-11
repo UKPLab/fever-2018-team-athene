@@ -338,7 +338,8 @@ class ESIM(BaseEstimator, ClassifierMixin):
 
         with tf.variable_scope(scope):
             with tf.variable_scope("embedding_lookup"):
-                embedding = tf.get_variable(initializer=self.embedding, dtype=tf.float32, trainable=self.trainable)
+                embedding = tf.get_variable(initializer=self.embedding, dtype=tf.float32, trainable=self.trainable,
+                                            name="word_embeddings")
                 inputs_embedded = tf.nn.embedding_lookup(embedding, inputs)
                 return inputs_embedded
 

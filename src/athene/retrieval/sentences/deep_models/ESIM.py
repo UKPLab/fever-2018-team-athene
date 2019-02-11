@@ -15,7 +15,7 @@ dim_fasttext = 300
 class ESIM:
 
     def __init__(self, optimizer=tf.train.AdamOptimizer, h_max_length=10, s_max_length=40, learning_rate=0.0001,
-                 batch_size=128, activation=tf.nn.relu, initializer=he_init, num_epoch=100, dropout_rate=None,
+                 batch_size=128, activation=tf.nn.tanh, initializer=he_init, num_epoch=100, dropout_rate=None,
                  embedding=None, word_dict=None, max_check_without_progress=3, model_store_dir=None, random_state=None,
                  l2_lambda=0, trainable=False, share_rnn=False, num_units=128):
 
@@ -149,10 +149,11 @@ class ESIM:
         else:
             self._training = None
 
-        embedding = tf.get_variable(initializer=self.embedding, dtype=tf.float32, trainable=self.trainable,
-                                    name="embedding")
-        embed_h = tf.nn.embedding_lookup(embedding, ids=X_h)
-        embed_s = tf.nn.embedding_lookup(embedding, ids=X_s)
+        with tf.variable_scope("embedding_lookup"):
+            embedding = tf.get_variable(initializer=self.embedding, dtype=tf.float32, trainable=self.trainable,
+                                        name="word_embeddings")
+            embed_h = tf.nn.embedding_lookup(embedding, ids=X_h)
+            embed_s = tf.nn.embedding_lookup(embedding, ids=X_s)
 
         if self.share_rnn:
             with tf.variable_scope("encode_rnn", reuse=tf.AUTO_REUSE):
@@ -208,6 +209,7 @@ class ESIM:
 
         init = tf.global_variables_initializer()
         saver = tf.train.Saver(tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES))
+        print("\n".join([str(el) for el in tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES)]))
 
         # if self.tensorboard_logdir:
         #     now = datetime.utcnow().strftime('%Y%m%d-%H%M%S')
@@ -427,17 +429,16 @@ class ESIM:
                 return self
 
     def restore_model(self, path):
-
-        print("Restoring model!")
         self._construct_graph()
 
         config = tf.ConfigProto()
         config.gpu_options.allow_growth = True
         config.gpu_options.per_process_gpu_memory_fraction = 0.5
-        sess = tf.Session(config=config)
-        self._saver.restore(sess, path)
-        self._session = sess
-
+        self._session = tf.Session(config=config)
+        with tf.variable_scope("embedding_lookup", reuse=True):
+            v = tf.get_variable("word_embeddings")
+            self._session.run(v.initializer)
+        self._saver.restore(self._session, path)
         return self
 
     def predict(self, X):

@@ -17,7 +17,7 @@ class ESIM(BaseEstimator, ClassifierMixin):
                  pos_weight=None, optimizer='adam', learning_rate=0.001, batch_size=128,
                  activation='relu', initializer='he', num_epoch=100, dropout_rate=None,
                  max_check_without_progress=10, show_progress=10, tensorboard_logdir=None, random_state=None,
-                 vocab_size=None, n_outputs=3, device=None):
+                 vocab_size=None, n_outputs=3, device=None, embedding=None):
 
         self.ckpt_path = ckpt_path
         self.trainable = trainable
@@ -39,7 +39,7 @@ class ESIM(BaseEstimator, ClassifierMixin):
         self.pos_weight = pos_weight
         self.name = name
         self.device = device
-        self.embedding = None
+        self.embedding = embedding
         self._graph = None
         self._classes = None
         self._session = None
@@ -314,20 +314,18 @@ class ESIM(BaseEstimator, ClassifierMixin):
                 output_4_classifier_concat = tf.concat([output_mean, output_max], 1, name="output_4_classifier_concat")
         return output_4_classifier_concat
 
-    def _add_embedding(self, inputs, scope):
-
-        with tf.variable_scope(scope):
-            with tf.variable_scope("embedding_lookup"):
-                embedding = tf.get_variable(initializer=self.embedding, dtype=tf.float32, trainable=self.trainable)
-                inputs_embedded = tf.nn.embedding_lookup(embedding, inputs)
-                return inputs_embedded
+    def _add_embedding(self, inputs):
+        embedding = tf.get_variable(initializer=self.embedding, dtype=tf.float32, trainable=self.trainable,
+                                    name="word_embeddings")
+        inputs_embedded = tf.nn.embedding_lookup(embedding, inputs)
+        return inputs_embedded
 
     def _ann(self, head_inputs, body_inputs, h_sent_sizes, b_sent_sizes):
 
         with tf.variable_scope("embedding_lookup") as scope:
-            heads_embeddings = self._add_embedding(head_inputs, scope)
+            heads_embeddings = self._add_embedding(head_inputs)
             scope.reuse_variables()
-            body_embeddings = self._add_embedding(body_inputs, scope)
+            body_embeddings = self._add_embedding(body_inputs)
 
         output = self._multi_rnn(heads_embeddings, body_embeddings, h_sent_sizes, b_sent_sizes)
 
@@ -663,8 +661,8 @@ class ESIM(BaseEstimator, ClassifierMixin):
                                        config=tf.ConfigProto(gpu_options=gpu_options)
                                        # config=config
                                        )
-            with self._session.as_default() as sess:
-                self._init.run()
-                sess.run(tf.tables_initializer())
-                self._saver.restore(sess, path)
+            with tf.variable_scope("embedding_lookup", reuse=True):
+                v = tf.get_variable("word_embeddings")
+                self._session.run(v.initializer)
+            self._saver.restore(self._session, path)
         return self
