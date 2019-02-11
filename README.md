@@ -10,13 +10,14 @@ This repository builds upon the baseline system repository developed by the FEVE
 This is an accompanying repository for our FEVER Workshop paper at EMNLP 2018. For more information see the paper: [UKP-Athene: Multi-Sentence Textual Entailment for Claim Verification](https://arxiv.org/pdf/1809.01479.pdf)
 
 Please use the following citation:
-	
-            @article{hanselowski2018ukp,
-                      title={UKP-Athene: Multi-Sentence Textual Entailment for Claim Verification},
-                      author={Hanselowski, Andreas and Zhang, Hao and Li, Zile and Sorokin, Daniil and Schiller, Benjamin and Schulz, Claudia and Gurevych, Iryna},
-                      journal={arXiv preprint arXiv:1809.01479},
-                      year={2018}
-                    }
+```
+@article{hanselowski2018ukp,
+          title={UKP-Athene: Multi-Sentence Textual Entailment for Claim Verification},
+          author={Hanselowski, Andreas and Zhang, Hao and Li, Zile and Sorokin, Daniil and Schiller, Benjamin and Schulz, Claudia and Gurevych, Iryna},
+          journal={arXiv preprint arXiv:1809.01479},
+          year={2018}
+        }
+```
 
 
 Disclaimer:
@@ -94,7 +95,7 @@ Construct an SQLite Database (go grab a coffee while this runs)
 
  
 ### Download the UKP-Athene models
-[coming soon]
+* Download the pre-trained sentence selection ESIM model and the claim verification ESIM models [here](https://public.ukp.informatik.tu-darmstadt.de/fever-2018-team-athene/). 
 
 ### Run the end-to-end pipeline of the submitted models
 
