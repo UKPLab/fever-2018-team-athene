@@ -89,9 +89,6 @@ Download the pre-processed Wikipedia articles and unzip it into the data folder.
 Construct an SQLite Database (go grab a coffee while this runs)
 
     PYTHONPATH=src python src/scripts/build_db.py data/wiki-pages data/fever/fever.db
-    
-#### 3. Sampling negative evidence
-[coming soon]
 
  
 ### Download the UKP-Athene models
