@@ -3,7 +3,7 @@
     "SUBMISSION_FILE_NAME": "predictions.jsonl",
     "model_name": "no_attention_glove",
     "glove_path": "./data/glove/glove.6B.300d.txt.gz",
-    "fasttext_path": "./data/fasttext/fasttext.p",
+    "fasttext_path": "./data/fasttext/wiki.en.bin",
     "model_folder": "model/no_attention_glove",
     "ckpt_folder": "model/no_attention_glove/checkpoints",
     "db_path": "./data/fever/fever.db",
