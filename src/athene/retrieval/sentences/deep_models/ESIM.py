@@ -209,7 +209,7 @@ class ESIM:
 
         init = tf.global_variables_initializer()
         saver = tf.train.Saver(tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES))
-        print("\n".join([str(el) for el in tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES)]))
+        # print("\n".join([str(el) for el in tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES)]))
 
         # if self.tensorboard_logdir:
         #     now = datetime.utcnow().strftime('%Y%m%d-%H%M%S')
