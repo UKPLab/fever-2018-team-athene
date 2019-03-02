@@ -92,18 +92,46 @@ Construct an SQLite Database (go grab a coffee while this runs)
 
  
 ### Download the UKP-Athene models
-* Download the pre-trained sentence selection ESIM model and the claim verification ESIM models [here](https://public.ukp.informatik.tu-darmstadt.de/fever-2018-team-athene/). 
+* Download the datasets already processed through document retrieval, the pre-trained sentence selection ESIM model and the pre-trained claim verification ESIM models [here](https://drive.google.com/drive/folders/17ibwpWeozFUORODduMKMNDTF0XM1_GgH?usp=sharing). Then place the datasets and the models as following:
 
+
+    mkdir -p model/no_attention_glove/rte_checkpoints/
+    mkdir -p model/esim_0/rte_checkpoints/
+    mkdir -p model/esim_0/sentence_retrieval_ensemble/
+    unzip claim_verification_esim.ckpt.zip -d model/no_attention_glove/rte_checkpoints/
+    unzip claim_verification_esim_glove_fasttext.ckpt.zip -d model/esim_0/rte_checkpoints/
+    unzip sentence_retrieval_ensemble.ckpt.zip -d model/esim_0/sentence_retrieval_ensemble/
+    unzip document_retrieval_datasets.zip -d data/fever/    
+    
 ### Run the end-to-end pipeline of the submitted models
 
     PYTHONPATH=src python src/script/athene/pipeline.py
+    
+### Run the pipeline in different modes:
+Launch the pipeline with optional mode arguments:
+
+    PYTHONPATH=src python src/script/athene/pipeline.py [--mode <mode>]
+
+All possible modes are as followings:
+
+|Modes|Description|
+|---|---|
+| `PIPELINE` | Default option. Run the complete pipeline with both training and predicting phases. |
+| `PIPELINE_NO_DOC_RETR` | Skip the document retrieval sub-task. With both training and predicting phases. In this case, the datasets already processed by document retrieval are needed.|
+| `PIPELINE_RTE_ONLY` | Train and predict only for the RTE sub-task. In this case, the datasets already processed by sentence retrieval are needed.|
+| `PREDICT` | Run the all 3 sub-tasks, but only with predicting phase in sentence retrieval and RTE. Only the test set is processed by the document retrieval and sentence retrieval sub-tasks.|
+| `PREDICT_NO_DOC_RETR` | Skip the document retrieval sub-task, and only with predicting phase. The test set processed by the document retrieval is needed, and only the test set is processed by sentence retrieval sub-tasks.|
+| `PREDICT_RTE_ONLY` | Predict for only the RTE sub-task.|
+| `PREDICT_ALL_DATASETS` | Run the all 3 sub-tasks, but only with predicting phase in sentence retrieval and RTE. All 3  datasets are processed by the document retrieval and sentence retrieval sub-tasks.|
+| `PREDICT_NO_DOC_RETR_ALL_DATASETS` | Skip the document retrieval sub-task, and only with predicting phase. All 3 datasets processed by the document retrieval are needed. All 3 datasets are processed by sentence retrieval sub-tasks.|
+    
 
 ### Run the variation of the RTE model
 Another variation of the ESIM model is configured through the config file in the conf folder.
 
 To run the models:
     
-    PYTHONPATH=src python src/scripts/athene/pipeline.py --config conf/<config_file>
+    PYTHONPATH=src python src/scripts/athene/pipeline.py --config conf/<config_file> [--mode <mode>]
     
 ### Contacts:
 If you have any questions regarding the code, please, don't hesitate to contact the authors or report an issue.

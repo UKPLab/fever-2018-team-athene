@@ -1,18 +1,15 @@
 import argparse
-import json
 import os
 import pickle
 
 import numpy as np
 from drqa.retriever.utils import normalize
-from tqdm import tqdm
 
-from athene.utils.config import Config
-from athene.rte.utils.data_reader import prediction_2_label, embed_data_set_with_glove_and_fasttext
+from athene.rte.utils.data_reader import embed_data_set_with_glove_and_fasttext, prediction_2_label
 from athene.rte.utils.estimator_definitions import get_estimator
 from athene.rte.utils.score import print_metrics
 from athene.rte.utils.text_processing import load_whole_glove, vocab_map
-from common.dataset.reader import JSONLineReader
+from athene.utils.config import Config
 from common.util.log_helper import LogHelper
 
 
@@ -20,7 +17,6 @@ def save_model(_clf, save_folder, filename, logger):
     """
     Dumps a given classifier to the specific folder with the given name
     """
-    import pickle
     _path = os.path.join(save_folder, filename)
     logger.debug("save model to " + _path)
     with open(_path, 'wb') as handle:
@@ -31,29 +27,40 @@ def load_model(save_folder, filename):
     """
     Loads and returns a classifier at the given folder with the given name
     """
-    import pickle
     _path = os.path.join(save_folder, filename)
+    if not os.path.isfile(_path):
+        return None
     with open(_path, 'rb') as handle:
         return pickle.load(handle)
 
 
-def generate_submission(_predictions, test_set_path, submission_path):
+def generate_submission(_predictions, _ids, test_set_path, submission_path):
     """
     Generate submission file for shared task: http://fever.ai/task.html
+    :param _ids:
     :param _predictions:
     :param test_set_path:
     :param submission_path:
     :return:
     """
+    from common.dataset.reader import JSONLineReader
+    from tqdm import tqdm
+    import json
+    _predictions_with_id = list(zip(_ids, _predictions))
     jlr = JSONLineReader()
     json_lines = jlr.read(test_set_path)
     os.makedirs(os.path.dirname(os.path.abspath(submission_path)), exist_ok=True)
     with open(submission_path, 'w') as f:
-        for _prediction, line in tqdm(zip(_predictions, json_lines)):
+        for line in tqdm(json_lines):
             for i, evidence in enumerate(line['predicted_evidence']):
                 line['predicted_evidence'][i][0] = normalize(evidence[0])
-            obj = {"id": line['id'], "predicted_evidence": line['predicted_evidence'],
-                   "predicted_label": prediction_2_label(_prediction)}
+            _id = line['id']
+            _pred_label = prediction_2_label(2)
+            for _pid, _plabel in _predictions_with_id:
+                if _pid == _id:
+                    _pred_label = prediction_2_label(_plabel)
+                    break
+            obj = {"id": _id, "predicted_evidence": line['predicted_evidence'], "predicted_label": _pred_label}
             f.write(json.dumps(obj))
             f.write('\n')
 
@@ -113,6 +120,8 @@ def main(mode, config, estimator=None):
         restore_param_required = estimator is None
         if estimator is None:
             estimator = load_model(Config.model_folder, Config.pickle_name)
+            if estimator is None:
+                estimator = get_estimator(Config.estimator_name, Config.ckpt_folder)
         vocab, embeddings = load_whole_glove(Config.glove_path)
         vocab = vocab_map(vocab)
         test_set, _, _, _, _, _ = embed_data_set_with_glove_and_fasttext(Config.test_set_file, Config.db_path,
@@ -133,7 +142,7 @@ def main(mode, config, estimator=None):
             'embedding': embeddings
         }
         predictions = estimator.predict(x_dict, restore_param_required)
-        generate_submission(predictions, Config.test_set_file, Config.submission_file)
+        generate_submission(predictions, test_set['id'], Config.test_set_file, Config.submission_file)
         if 'label' in test_set:
             print_metrics(test_set['label'], predictions, logger)
     else:

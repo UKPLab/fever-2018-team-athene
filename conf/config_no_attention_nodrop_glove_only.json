@@ -5,7 +5,7 @@
     "glove_path": "./data/glove/glove.6B.300d.txt.gz",
     "fasttext_path": "./data/fasttext/wiki.en.bin",
     "model_folder": "model/no_attention_glove",
-    "ckpt_folder": "model/no_attention_glove/checkpoints",
+    "ckpt_folder": "model/no_attention_glove/rte_checkpoints",
     "db_path": "./data/fever/fever.db",
     "dataset_folder": "./data/fever",
     "training_set_file": "./data/fever/train.p7.s5.jsonl",
@@ -45,5 +45,5 @@
     "max_sentence_size": 50,
     "n_jobs_ensemble": 3,
     "seed": 55,
-    "name": "esim1"
+    "name": "claim_verification_esim"
 }

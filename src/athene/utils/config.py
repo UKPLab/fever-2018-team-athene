@@ -40,7 +40,7 @@ class Config:
     fasttext_path = path.join(BASE_DIR, "data/fasttext/wiki.en.bin")
     # fasttext_path = path.join(BASE_DIR, "data/fasttext/fasttext.p")
     model_folder = path.join(BASE_DIR, "model/%s" % model_name)
-    ckpt_folder = path.join(model_folder, 'checkpoints')
+    ckpt_folder = path.join(model_folder, 'rte_checkpoints')
     db_path = path.join(BASE_DIR, "data/fever/fever.db")
     dataset_folder = path.join(BASE_DIR, "data/fever")
     raw_training_set = path.join(BASE_DIR, "data/fever-data/train.jsonl")
@@ -128,7 +128,7 @@ class Config:
     # seed = [55, 42, 666, 1234, 4321]
     seed = 55
     vocab_file = path.join(BASE_DIR, 'vocab.p')
-    name = 'esim1'
+    name = 'claim_verification_esim'
     sentence_retrieval_ensemble_param = {
         'num_model': 5,
         'random_seed': 1234,

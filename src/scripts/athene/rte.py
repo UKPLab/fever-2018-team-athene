@@ -1,63 +1,18 @@
 import argparse
-import json
 import os
 import pickle
 
 import numpy as np
-from drqa.retriever.utils import normalize
-from tqdm import tqdm
 
-from athene.rte.utils.data_reader import prediction_2_label, embed_data_set_with_glove_2, load_feature_by_data_set, \
+from athene.rte.utils.data_reader import embed_data_set_with_glove_2, load_feature_by_data_set, \
     number_feature, generate_concat_indices_for_inter_evidence, generate_concat_indices_for_claim
 from athene.rte.utils.estimator_definitions import get_estimator
 from athene.rte.utils.score import print_metrics
 from athene.rte.utils.text_processing import load_whole_glove, vocab_map
 from athene.utils.config import Config
-from common.dataset.reader import JSONLineReader
 from common.util.log_helper import LogHelper
 from scripts.athene.rte_fasttext import main as main_fasttext
-
-
-def save_model(_clf, save_folder, filename, logger):
-    """
-    Dumps a given classifier to the specific folder with the given name
-    """
-    import pickle
-    _path = os.path.join(save_folder, filename)
-    logger.debug("save model to " + _path)
-    with open(_path, 'wb') as handle:
-        pickle.dump(_clf, handle, protocol=pickle.HIGHEST_PROTOCOL)
-
-
-def load_model(save_folder, filename):
-    """
-    Loads and returns a classifier at the given folder with the given name
-    """
-    import pickle
-    _path = os.path.join(save_folder, filename)
-    with open(_path, 'rb') as handle:
-        return pickle.load(handle)
-
-
-def generate_submission(_predictions, test_set_path, submission_path):
-    """
-    Generate submission file for shared task: http://fever.ai/task.html
-    :param _predictions:
-    :param test_set_path:
-    :param submission_path:
-    :return:
-    """
-    jlr = JSONLineReader()
-    json_lines = jlr.read(test_set_path)
-    os.makedirs(os.path.dirname(os.path.abspath(submission_path)), exist_ok=True)
-    with open(submission_path, 'w') as f:
-        for _prediction, line in tqdm(zip(_predictions, json_lines)):
-            for i, evidence in enumerate(line['predicted_evidence']):
-                line['predicted_evidence'][i][0] = normalize(evidence[0])
-            obj = {"id": line['id'], "predicted_evidence": line['predicted_evidence'],
-                   "predicted_label": prediction_2_label(_prediction)}
-            f.write(json.dumps(obj))
-            f.write('\n')
+from .rte_fasttext import save_model, load_model, generate_submission
 
 
 def main(mode, config, estimator=None):
@@ -177,6 +132,8 @@ def main(mode, config, estimator=None):
         restore_param_required = estimator is None
         if estimator is None:
             estimator = load_model(Config.model_folder, Config.pickle_name)
+            if estimator is None:
+                estimator = get_estimator(Config.estimator_name, Config.ckpt_folder)
         vocab, embeddings = load_whole_glove(Config.glove_path)
         vocab = vocab_map(vocab)
         test_set, _, _, _, _ = embed_data_set_with_glove_2(Config.test_set_file, Config.db_path, vocab_dict=vocab,
@@ -218,7 +175,7 @@ def main(mode, config, estimator=None):
             test_set['data']['b_concat_indices_for_h'] = test_all_evidences_indices
             test_set['data']['b_concat_sizes_for_h'] = test_all_evidences_sizes
         predictions = estimator.predict(x_dict, restore_param_required)
-        generate_submission(predictions, Config.test_set_file, Config.submission_file)
+        generate_submission(predictions, test_set['id'], Config.test_set_file, Config.submission_file)
         if 'label' in test_set:
             print_metrics(test_set['label'], predictions, logger)
     else:
