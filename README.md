@@ -92,7 +92,7 @@ Construct an SQLite Database (go grab a coffee while this runs)
 
  
 ### Download the UKP-Athene models
-* Download the datasets already processed through document retrieval, the pre-trained sentence selection ESIM model and the pre-trained claim verification ESIM models [here](https://drive.google.com/drive/folders/17ibwpWeozFUORODduMKMNDTF0XM1_GgH?usp=sharing). Then place the datasets and the models as following:
+Download the datasets already processed through document retrieval, the pre-trained sentence selection ESIM model and the pre-trained claim verification ESIM models [here](https://drive.google.com/drive/folders/17ibwpWeozFUORODduMKMNDTF0XM1_GgH?usp=sharing). Then place the datasets and the models as following:
 
 
     mkdir -p model/no_attention_glove/rte_checkpoints/
