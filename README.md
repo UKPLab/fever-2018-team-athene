@@ -92,9 +92,13 @@ Construct an SQLite Database (go grab a coffee while this runs)
 
  
 ### Download the UKP-Athene models
-Download the datasets already processed through document retrieval, the pre-trained sentence selection ESIM model and the pre-trained claim verification ESIM models [here](https://public.ukp.informatik.tu-darmstadt.de/fever-2018-team-athene/). Then place the datasets and the models as following:
+Download the datasets already processed through document retrieval, the pre-trained sentence selection ESIM model and the pre-trained claim verification ESIM models [here](https://public.ukp.informatik.tu-darmstadt.de/fever-2018-team-athene/). Download the files as followings:
 
 
+    wget https://public.ukp.informatik.tu-darmstadt.de/fever-2018-team-athene/claim_verification_esim.ckpt.zip
+    wget https://public.ukp.informatik.tu-darmstadt.de/fever-2018-team-athene/claim_verification_esim_glove_fasttext.ckpt.zip
+    wget https://public.ukp.informatik.tu-darmstadt.de/fever-2018-team-athene/document_retrieval_datasets.zip
+    wget https://public.ukp.informatik.tu-darmstadt.de/fever-2018-team-athene/sentence_retrieval_ensemble.ckpt.zip
     mkdir -p model/no_attention_glove/rte_checkpoints/
     mkdir -p model/esim_0/rte_checkpoints/
     mkdir -p model/esim_0/sentence_retrieval_ensemble/
