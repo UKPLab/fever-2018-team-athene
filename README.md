@@ -136,7 +136,67 @@ Another variation of the ESIM model is configured through the config file in the
 To run the models:
     
     PYTHONPATH=src python src/scripts/athene/pipeline.py --config conf/<config_file> [--mode <mode>]
-    
+
+
+### Description of the Config File
+The config file regarding the file paths and the hyper parameters is [src/athene/utils/config.py](https://github.com/UKPLab/fever-2018-team-athene/blob/master/src/athene/utils/config.py). The descriptions of each field are followings:
+
+|Field|Description|
+|---|---|
+|model_name|Name of the RTE model. Used as part of the path to save the trained RTE model.|
+|glove_path|Path to the pre-trained GloVe word embedding. Either point to the glove.6B.300d.txt.gz or the glove.6B.300d.txt file.|
+|fasttext_path|Path to the pre-trained FastText word embedding. Should point to the wiki.en.bin file.|
+|ckpt_folder|Path to the checkpoint folder for the trained RTE model. Default as model/<model_name>/rte_checkpoints.|
+|db_path|Path to the FEVER database file.|
+|dataset_folder|Path to the dataset folder.|
+|raw_training_set|Path to the original training set file.|
+|raw_dev_set|Path to the original development set file.|
+|raw_test_set|Path to the original test set file.|
+|training_doc_file|Path to the training set with predicted pages, i.e. the output of the training set through document retrieval sub-task.|
+|dev_doc_file|Path to the development set with predicted pages, i.e. the output of the development set through document retrieval sub-task.|
+|test_doc_file|Path to the test set with predicted pages, i.e. the output of the test set through document retrieval sub-task.|
+|training_set_file|Path to the training set with predicted evidences, i.e. the output of the training set through sentence retrieval sub-task.|
+|dev_set_file|Path to the development set with predicted evidences, i.e. the output of the development set through sentence retrieval sub-task.|
+|test_set_file|Path to the test set with predicted evidences, i.e. the output of the test set through sentence retrieval sub-task.|
+|document_k_wiki|The maximal number of candidate pages for each claim in the document retrieval sub-task.|
+|document_parallel|Whether to perform the document retrieval sub-task parallel. True or False.|
+|document_add_claim|Whether to append the original claim to the query to the MediaWiki API in the document retrieval sub-task. True or False.|
+|submission_file|Path to the final submission file.|
+|estimator_name|The name of the RTE estimator referring to [src/athene/rte/utils/estimator_definitions.py](https://github.com/UKPLab/fever-2018-team-athene/blob/master/src/athene/rte/utils/estimator_definitions.py).|
+|max_sentences|The maximal number of predicted evidences for each claim.|
+|max_sentence_size|The maximal length of each predicted evidence. The words that exceed the maximal length are truncated.|
+|max_claim_size|The maximal length of each claim. The words that exceed the maximal length are truncated.|
+|seed|Random seed of the RTE sub-task.|
+|name|The prefix of the checkpoint files for the RTE sub-task. The checkpoint files will be saved in the <ckpt_folder>.|
+
+'**esim_hyper_param**' field contains the hyper parameters regarding the ESIM based model in the RTE sub-task. The descriptions of several special parameters are followings:
+
+|Field|Description|
+|---|---|
+|num_neurons|The number of neurons for each layer in the model. The first 2 numbers refer to the numbers of neurons of the two bidirectional RNNs in the ESIM model.|
+|pos_weight|The positive weights of the 3 classes for the weighted loss. The order is Supported, Refuted, Not Enough Info.|
+|max_checks_no_progress|Early stopping policy. Stop training if no improvement in the last x epochs.|
+|trainable|Whether to fine tune the word embeddings. True or False.|
+
+'**sentence_retrieval_ensemble_param**' field contains the hyper parameters regarding the ESIM based model in the sentence retrieval sub-task. The descriptions of several special parameters are followings:
+
+|Field|Description|
+|---|---|
+|num_model|The number of models to ensemble.|
+|tf_random_state|The random seeds for the models to ensemble.|
+|num_negatives|The number of negative sampling, i.e. false evidences, for each claim in the training phase.|
+|c_max_length|The maximal length of each claim. The words that exceed the maximal length are truncated.|
+|s_max_length|The maximal length of each candidate evidence sentence. The words that exceed the maximal length are truncated.|
+|reserve_embed|Whether to reserve slots in the word embeddings for unseen words. True or False.|
+|model_path|Path to the folder for the checkpoint files of the ensemble models.|
+
+Configurations can be exported into json files. To export the current config set, run the script:
+
+    PYTHONPATH=src python src/scripts/athene/export_current_config_to_json.py <path/to/output/json>
+
+To use exported configurations, launch the pipeline with argument:
+
+    PYTHONPATH=src python src/scripts/athene/pipeline.py --config <path/to/output/json>
 ### Contacts:
 If you have any questions regarding the code, please, don't hesitate to contact the authors or report an issue.
   * \<lastname\>@ukp.informatik.tu-darmstadt.de
