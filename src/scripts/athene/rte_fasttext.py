@@ -83,7 +83,7 @@ def main(mode, config, estimator=None):
         training_set, fasttext_model, vocab, embeddings, _, _ = embed_data_set_with_glove_and_fasttext(
             Config.training_set_file, Config.db_path, fasttext_model, glove_path=Config.glove_path,
             threshold_b_sent_num=Config.max_sentences, threshold_b_sent_size=Config.max_sentence_size,
-            threshold_h_sent_size=Config.max_sentence_size)
+            threshold_h_sent_size=Config.max_claim_size)
         h_sent_sizes = training_set['data']['h_sent_sizes']
         h_sizes = np.ones(len(h_sent_sizes), np.int32)
         training_set['data']['h_sent_sizes'] = np.expand_dims(h_sent_sizes, 1)
@@ -96,7 +96,7 @@ def main(mode, config, estimator=None):
                                                                           glove_embeddings=embeddings,
                                                                           threshold_b_sent_num=Config.max_sentences,
                                                                           threshold_b_sent_size=Config.max_sentence_size,
-                                                                          threshold_h_sent_size=Config.max_sentence_size)
+                                                                          threshold_h_sent_size=Config.max_claim_size)
         del fasttext_model
         h_sent_sizes = valid_set['data']['h_sent_sizes']
         h_sizes = np.ones(len(h_sent_sizes), np.int32)
@@ -129,7 +129,7 @@ def main(mode, config, estimator=None):
                                                                          glove_embeddings=embeddings,
                                                                          threshold_b_sent_num=Config.max_sentences,
                                                                          threshold_b_sent_size=Config.max_sentence_size,
-                                                                         threshold_h_sent_size=Config.max_sentence_size)
+                                                                         threshold_h_sent_size=Config.max_claim_size)
         del fasttext_model
         h_sent_sizes = test_set['data']['h_sent_sizes']
         h_sizes = np.ones(len(h_sent_sizes), np.int32)
