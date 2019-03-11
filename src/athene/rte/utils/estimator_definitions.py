@@ -18,7 +18,7 @@ def get_estimator(scorer_type, save_folder=None):
                    batch_size=Config.esim_hyper_param['batch_size'],
                    dropout_rate=Config.esim_hyper_param['dropout'],
                    num_neurons=Config.esim_hyper_param['num_neurons'], pos_weight=pos_weight,
-                   ckpt_path=path.join(save_folder, Config.name + '.ckpt'), name=Config.name, device='/device:GPU:0')
+                   ckpt_path=path.join(save_folder, Config.name + '.ckpt'), name=Config.name)
 
     if scorer_type == 'esim_glove_no_attention':
         # glove, no attention
@@ -36,5 +36,5 @@ def get_estimator(scorer_type, save_folder=None):
                    batch_size=Config.esim_hyper_param['batch_size'],
                    dropout_rate=Config.esim_hyper_param['dropout'],
                    num_neurons=Config.esim_hyper_param['num_neurons'], pos_weight=pos_weight,
-                   ckpt_path=path.join(save_folder, Config.name + '.ckpt'), name=Config.name, device='/device:GPU:0')
+                   ckpt_path=path.join(save_folder, Config.name + '.ckpt'), name=Config.name)
     return clf
