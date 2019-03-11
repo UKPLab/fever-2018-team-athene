@@ -9,6 +9,7 @@ from common.util.log_helper import LogHelper
 
 # he_init = tf.contrib.layers.variance_scaling_initializer()
 dim_fasttext = 300
+n_birnn = 2
 
 
 class ESIM(BaseEstimator, ClassifierMixin):
@@ -19,7 +20,7 @@ class ESIM(BaseEstimator, ClassifierMixin):
     def __init__(self, name=None, ckpt_path=None, trainable=False, lstm_layers=2, num_neurons=[128, 128, 32],
                  pos_weight=None, optimizer='adam', learning_rate=0.001, batch_size=128,
                  activation='relu', initializer='he', num_epoch=100, dropout_rate=None,
-                 max_check_without_progress=10, show_progress=10, tensorboard_logdir=None, random_state=None,
+                 max_check_without_progress=10, show_progress=1, tensorboard_logdir=None, random_state=None,
                  vocab_size=None, n_outputs=3, device=None):
 
         self.ckpt_path = ckpt_path
@@ -359,7 +360,7 @@ class ESIM(BaseEstimator, ClassifierMixin):
 
             if self.dropout_rate:
                 output = tf.layers.dropout(output, rate=self.dropout_rate, training=self._training)
-            output = tf.layers.dense(output, self.num_neurons[self.lstm_layers + layer], activation=self._activation,
+            output = tf.layers.dense(output, self.num_neurons[n_birnn + layer], activation=self._activation,
                                      kernel_initializer=self._initializer, name="hidden{}".format(layer + 1))
 
             # output = self.activation(output, name="hidden{}_out".format(layer + 1))
