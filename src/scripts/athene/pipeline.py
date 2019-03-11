@@ -4,7 +4,7 @@ from enum import Enum
 
 from athene.retrieval.document.docment_retrieval import main as document_retrieval_main
 from athene.retrieval.sentences.ensemble import entrance as sentence_retrieval_ensemble_entrance
-from athene.retrieval.sentences.sentence_retrieval import main as sentence_retrieval_main
+# from athene.retrieval.sentences.sentence_retrieval import main as sentence_retrieval_main
 from athene.utils.config import Config
 from common.util.log_helper import LogHelper
 from scripts.athene.rte import entrance as rte_main
@@ -31,50 +31,50 @@ class Mode(Enum):
             raise ValueError()
 
 
-def sentence_retrieval_single_model(logger):
-    logger.info("Starting data pre-processing...")
-    tmp_file = os.path.join(Config.dataset_folder, "tmp.jsonl")
-    with open(tmp_file, 'w') as wf:
-        files = [Config.training_doc_file, Config.dev_doc_file, Config.test_doc_file]
-        for f in files:
-            with open(f) as rf:
-                for line in rf:
-                    wf.write(line)
-    sentence_retrieval_main(model=Config.sentence_retrieval_model_name,
-                            model_store_dir=Config.sentence_retrieval_model_folder,
-                            training_set=Config.training_doc_file, dev_set=Config.dev_doc_file,
-                            test_set=tmp_file, output_test_set=None,
-                            embedding_path=Config.sentence_retrieval_embedding_folder, mode="data_preprocessing")
-    os.remove(tmp_file)
-    logger.info("Starting training sentence retrieval and selecting sentences for dev set...")
-    os.remove(os.path.join(Config.sentence_retrieval_embedding_folder, "test_data.p"))
-    os.remove(os.path.join(Config.sentence_retrieval_embedding_folder, "test_indexes.p"))
-    sentence_clf = sentence_retrieval_main(model=Config.sentence_retrieval_model_name,
-                                           model_store_dir=Config.sentence_retrieval_model_folder,
-                                           training_set=Config.training_doc_file, dev_set=Config.dev_doc_file,
-                                           test_set=Config.dev_doc_file, output_test_set=Config.dev_set_file,
-                                           embedding_path=Config.sentence_retrieval_embedding_folder)
-    logger.info("Finished training sentence retrieval and selecting sentences for test set.")
-    logger.info("Starting selecting sentences for training set...")
-    os.remove(os.path.join(Config.sentence_retrieval_embedding_folder, "test_data.p"))
-    os.remove(os.path.join(Config.sentence_retrieval_embedding_folder, "test_indexes.p"))
-    sentence_clf = sentence_retrieval_main(model=Config.sentence_retrieval_model_name,
-                                           model_store_dir=Config.sentence_retrieval_model_folder,
-                                           training_set=Config.training_doc_file, dev_set=Config.dev_doc_file,
-                                           test_set=Config.training_doc_file, output_test_set=Config.training_set_file,
-                                           embedding_path=Config.sentence_retrieval_embedding_folder, mode="test",
-                                           clf=sentence_clf)
-    logger.info("Finished selecting sentences for training set.")
-    logger.info("Starting selecting sentences for test set...")
-    os.remove(os.path.join(Config.sentence_retrieval_embedding_folder, "test_data.p"))
-    os.remove(os.path.join(Config.sentence_retrieval_embedding_folder, "test_indexes.p"))
-    sentence_clf = sentence_retrieval_main(model=Config.sentence_retrieval_model_name,
-                                           model_store_dir=Config.sentence_retrieval_model_folder,
-                                           training_set=Config.training_doc_file, dev_set=Config.dev_doc_file,
-                                           test_set=Config.test_doc_file, output_test_set=Config.test_set_file,
-                                           embedding_path=Config.sentence_retrieval_embedding_folder, mode="test",
-                                           clf=sentence_clf)
-    logger.info("Finished selecting sentences for dev set.")
+# def sentence_retrieval_single_model(logger):
+#     logger.info("Starting data pre-processing...")
+#     tmp_file = os.path.join(Config.dataset_folder, "tmp.jsonl")
+#     with open(tmp_file, 'w') as wf:
+#         files = [Config.training_doc_file, Config.dev_doc_file, Config.test_doc_file]
+#         for f in files:
+#             with open(f) as rf:
+#                 for line in rf:
+#                     wf.write(line)
+#     sentence_retrieval_main(model=Config.sentence_retrieval_model_name,
+#                             model_store_dir=Config.sentence_retrieval_model_folder,
+#                             training_set=Config.training_doc_file, dev_set=Config.dev_doc_file,
+#                             test_set=tmp_file, output_test_set=None,
+#                             embedding_path=Config.sentence_retrieval_embedding_folder, mode="data_preprocessing")
+#     os.remove(tmp_file)
+#     logger.info("Starting training sentence retrieval and selecting sentences for dev set...")
+#     os.remove(os.path.join(Config.sentence_retrieval_embedding_folder, "test_data.p"))
+#     os.remove(os.path.join(Config.sentence_retrieval_embedding_folder, "test_indexes.p"))
+#     sentence_clf = sentence_retrieval_main(model=Config.sentence_retrieval_model_name,
+#                                            model_store_dir=Config.sentence_retrieval_model_folder,
+#                                            training_set=Config.training_doc_file, dev_set=Config.dev_doc_file,
+#                                            test_set=Config.dev_doc_file, output_test_set=Config.dev_set_file,
+#                                            embedding_path=Config.sentence_retrieval_embedding_folder)
+#     logger.info("Finished training sentence retrieval and selecting sentences for test set.")
+#     logger.info("Starting selecting sentences for training set...")
+#     os.remove(os.path.join(Config.sentence_retrieval_embedding_folder, "test_data.p"))
+#     os.remove(os.path.join(Config.sentence_retrieval_embedding_folder, "test_indexes.p"))
+#     sentence_clf = sentence_retrieval_main(model=Config.sentence_retrieval_model_name,
+#                                            model_store_dir=Config.sentence_retrieval_model_folder,
+#                                            training_set=Config.training_doc_file, dev_set=Config.dev_doc_file,
+#                                            test_set=Config.training_doc_file, output_test_set=Config.training_set_file,
+#                                            embedding_path=Config.sentence_retrieval_embedding_folder, mode="test",
+#                                            clf=sentence_clf)
+#     logger.info("Finished selecting sentences for training set.")
+#     logger.info("Starting selecting sentences for test set...")
+#     os.remove(os.path.join(Config.sentence_retrieval_embedding_folder, "test_data.p"))
+#     os.remove(os.path.join(Config.sentence_retrieval_embedding_folder, "test_indexes.p"))
+#     sentence_clf = sentence_retrieval_main(model=Config.sentence_retrieval_model_name,
+#                                            model_store_dir=Config.sentence_retrieval_model_folder,
+#                                            training_set=Config.training_doc_file, dev_set=Config.dev_doc_file,
+#                                            test_set=Config.test_doc_file, output_test_set=Config.test_set_file,
+#                                            embedding_path=Config.sentence_retrieval_embedding_folder, mode="test",
+#                                            clf=sentence_clf)
+#     logger.info("Finished selecting sentences for dev set.")
 
 
 def _construct_args_for_sentence_retrieval(phase='training'):
