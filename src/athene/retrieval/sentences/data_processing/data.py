@@ -352,9 +352,9 @@ class Data(object):
 
         feat_size = len(embed_dict[list(embed_dict.keys())[0]])
         if self.reserve_embed:
-            embed = np.zeros((len(embed_dict) + 200000, feat_size), np.float32)
+            embed = np.zeros((len(embed_dict) + 200000 + 1, feat_size), np.float32)
         else:
-            embed = np.zeros((len(embed_dict), feat_size), np.float32)
+            embed = np.zeros((len(embed_dict) + 1, feat_size), np.float32)
         for k in embed_dict:
             embed[k] = np.asarray(embed_dict[k])
         print('Generate numpy embed:', embed.shape)
