@@ -107,7 +107,7 @@ pycodestyle==2.4.0
 pycorenlp==0.3.0
 pycparser==2.18
 pyfasttext==0.4.5
-Pygments==2.2.0
+Pygments==2.7.4
 pyhocon==0.3.35
 pylint==1.9.1
 pyparsing==2.2.0
