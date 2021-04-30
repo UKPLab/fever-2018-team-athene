@@ -122,7 +122,7 @@ requests==2.18.4
 responses==0.9.0
 retinasdk==1.0.0
 rope==0.10.7
-rsa==3.4.2
+rsa==4.7
 s3transfer==0.1.13
 sanic==0.6.0
 Sanic-Cors==0.9.4
